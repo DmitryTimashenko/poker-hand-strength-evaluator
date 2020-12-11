@@ -1,0 +1,8 @@
+version: "3.3"
+services: 
+  pocer-app:
+    image: ubuntu
+    volumes: 
+      - .:/app
+    working_dir: /app
+    command: "./test.sh"
