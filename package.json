@@ -7,7 +7,7 @@
     "build": "tsc"
   },
   "keywords": [],
-  "author": "",
+  "author": "Dzmitry Tsimashnka",
   "license": "ISC",
   "devDependencies": {
     "@types/node": "^14.14.12",
