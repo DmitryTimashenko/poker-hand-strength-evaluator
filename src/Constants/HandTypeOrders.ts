@@ -1,6 +1,6 @@
-import { HandType } from "../Constants";
+import { HandType } from ".";
 
-const handTypeWeight = {
+const handTypeOrders = {
   [HandType.HIGH_CARD]: 1,
   [HandType.ONE_PAIR]: 2,
   [HandType.TWO_PAIR]: 3,
@@ -12,4 +12,4 @@ const handTypeWeight = {
   [HandType.STRAIGHT_FLUSH]: 9,
 }
 
-export default handTypeWeight;
+export default handTypeOrders;

@@ -1,13 +1,11 @@
 import * as readline from "readline";
-import { GameType, Rank } from "./Constants";
+import { GameType} from "./Constants";
 import { ICard, IGame } from "./Contracts";
-import getHandType from "./Factory/PokerHand/HandTypeDetector";
 
 const rl = readline.createInterface({
   input: process.stdin,
   output: process.stdout,
 });
-
 
 const texasHoldemGameBuilder = (input: String[]): IGame => {
   const board = input.shift();
