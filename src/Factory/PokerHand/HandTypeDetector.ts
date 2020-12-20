@@ -59,7 +59,7 @@ const isStraight = (groups: Array<ICard[]>): boolean => {
     return false;
   }
 
-  if (Rank.ACE === groups[0][0].rank && Rank.FOUR === groups[1][0].rank) {
+  if (Rank.ACE === groups[0][0].rank && Rank.FIVE === groups[1][0].rank) {
     return true;
   }
 

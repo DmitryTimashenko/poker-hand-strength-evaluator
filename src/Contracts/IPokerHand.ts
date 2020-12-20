@@ -5,6 +5,7 @@ interface IPokerHand {
   handType: HandType;
   cardGroups: Array<ICard[]>;
   weight: number;
+  label: string;
 }
 
 export default IPokerHand;

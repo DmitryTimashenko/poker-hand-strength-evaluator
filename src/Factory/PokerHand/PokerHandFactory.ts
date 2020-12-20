@@ -10,7 +10,8 @@ const getPokerHand = (cards: ICard[]): IPokerHand => {
   return {
     handType: handType,
     cardGroups: groups,
-    weight: weight
+    weight: weight,
+    label: ""
   };
 }
 

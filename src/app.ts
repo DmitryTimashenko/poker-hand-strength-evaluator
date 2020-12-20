@@ -1,6 +1,9 @@
 import * as readline from "readline";
-import { GameType} from "./Constants";
+import { GameType } from "./Constants";
 import { ICard, IGame } from "./Contracts";
+import processGame from "./GameProcessors/GameProcessor";
+import { produceCombinations } from "./Helpers/Сombinatorics";
+
 
 const rl = readline.createInterface({
   input: process.stdin,
@@ -11,8 +14,14 @@ const texasHoldemGameBuilder = (input: String[]): IGame => {
   const board = input.shift();
   return {
     type: GameType.TEXAS_HOLDEM,
-    board: undefined === board ? undefined : stringToCardsArray(board),
-    hands: input.map((str: String) => stringToCardsArray(str)),
+    board: undefined === board ? [] : stringToCardsArray(board),
+    players: input.map((str: String) => {
+      return {
+        name: str,
+        cards: stringToCardsArray(str),
+        bestHand: undefined
+      }
+    }),
   };
 }
 
@@ -20,16 +29,28 @@ const omahaHoldemGameBuilder = (input: String[]): IGame => {
   const board = input.shift();
   return {
     type: GameType.OMAHA_HOLDEM,
-    board: undefined === board ? undefined : stringToCardsArray(board),
-    hands: input.map((str: String) => stringToCardsArray(str)),
+    board: undefined === board ? [] : stringToCardsArray(board),
+    players: input.map((str: String) => {
+      return {
+        name: str,
+        cards: stringToCardsArray(str),
+        bestHand: undefined
+      }
+    }),
   };
 }
 
 const fiveCardDrawGameBuilder = (input: String[]): IGame => {
   return {
     type: GameType.FIVE_CARD_DRAW,
-    board: undefined,
-    hands: input.map((str: String) => stringToCardsArray(str)),
+    board: [],
+    players: input.map((str: String) => {
+      return {
+        name: str,
+        cards: stringToCardsArray(str),
+        bestHand: undefined
+      }
+    }),
   };
 }
 
@@ -58,7 +79,7 @@ rl.on("line", function (line: String) {
       break;
     }
     case GameType.FIVE_CARD_DRAW: {
-      console.log(errorPrefix + "The solution doesn't support Five Card Draw");
+      game = fiveCardDrawGameBuilder(input);
       break;
     }
     case undefined: {
@@ -70,4 +91,6 @@ rl.on("line", function (line: String) {
       return;
     }
   }
+
+  processGame(game);
 });
