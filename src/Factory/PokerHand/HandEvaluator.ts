@@ -1,25 +1,15 @@
-import { HandType, handTypeOrders, Rank, ranksOrder } from "../../Constants";
+import { HandType, handTypeOrders, ranksOrder } from "../../Constants";
 import { ICard } from "../../Contracts";
 
 const getWeight = (handType: HandType, cardGroups: Array<ICard[]>): number => {
-    let weight = 0;
+    let weightString: String = '';
 
     cardGroups.forEach(group => group.forEach(card => {
-        weight |= getRankBinaryFlag(card.rank)
+        weightString += String(ranksOrder[card.rank]).padStart(2, '0');
     }));
 
-    weight |= getHandTypeBinaryFlag(handType);
-
-    return weight;
-}
-
-const getRankBinaryFlag = (rank: Rank): number => {
-    return Math.pow(2, ranksOrder[rank] - 1);
-}
-
-const getHandTypeBinaryFlag = (handType: HandType): number => {
-    const maxRankOrder = Object.values(ranksOrder).length;
-    return Math.pow(2, handTypeOrders[handType] + maxRankOrder - 1);
+    weightString = String(handTypeOrders[handType]) + weightString;
+    return parseInt(<string>weightString);
 }
 
 export default getWeight;

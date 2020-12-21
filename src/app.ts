@@ -2,8 +2,6 @@ import * as readline from "readline";
 import { GameType } from "./Constants";
 import { ICard, IGame } from "./Contracts";
 import processGame from "./GameProcessors/GameProcessor";
-import { produceCombinations } from "./Helpers/Сombinatorics";
-
 
 const rl = readline.createInterface({
   input: process.stdin,

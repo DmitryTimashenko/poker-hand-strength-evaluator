@@ -1,6 +1,6 @@
 version: "3.3"
 services: 
-  pocer-app:
+  poker-app:
     image: ubuntu
     volumes: 
       - .:/app
