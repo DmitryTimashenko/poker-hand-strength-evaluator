@@ -22,17 +22,13 @@ const processGame = (game: IGame): IGame => {
   let boardSets = produceCombinations(game.board, boardSetsCount);
 
   game.players.forEach(player => {
-    if (0 === boardSetsCount) {
-      player.bestHand = getPokerHand(player.cards);
-    } else {
 
       let handSets = produceCombinations(player.cards, handSetsCount);
-      let sets = combineTwoSets(boardSets, handSets);
+      let sets = combineTwoSets(handSets, boardSets);
 
       player.bestHand = sets
         .map(set => getPokerHand(set))
         .reduce((max: IPokerHand, pokerHand: IPokerHand) => max.weight > pokerHand.weight ? max : pokerHand);
-    }
     return player;
   });
 
@@ -49,6 +45,14 @@ const processGame = (game: IGame): IGame => {
 }
 
 const combineTwoSets = (firstSet: Array<ICard[]>, secondSet: Array<ICard[]>): Array<ICard[]> => {
+  if (0 === firstSet.length) {
+    return secondSet;
+  }
+
+  if (0 === secondSet.length) {
+    return firstSet;
+  }
+
   let result: Array<ICard[]> = [];
   firstSet.forEach(itemFirstSet => {
     secondSet.forEach(itemSecondSet => {
