@@ -1,6 +1,8 @@
 import * as readline from "readline";
 import { GameType } from "./Constants";
-import { ICard, IGame } from "./Contracts";
+import { IGame, IPlayer } from "./Contracts";
+import { omahaHoldemGameFactory, texasHoldemGameFactory } from "./Factory";
+import fiveCardDrawGameFactory from "./Factory/FiveCardDrawGameFactory";
 import processGame from "./GameProcessors/GameProcessor";
 
 const rl = readline.createInterface({
@@ -8,57 +10,16 @@ const rl = readline.createInterface({
   output: process.stdout,
 });
 
-const texasHoldemGameBuilder = (input: String[]): IGame => {
-  const board = input.shift();
-  return {
-    type: GameType.TEXAS_HOLDEM,
-    board: undefined === board ? [] : stringToCardsArray(board),
-    players: input.map((str: String) => {
-      return {
-        name: str,
-        cards: stringToCardsArray(str),
-        bestHand: undefined
-      }
-    }),
-  };
-}
+const viewGameResults = (game: IGame) => {
+  let output = '';
+  game.players.reduce((previousWeight: number, player: IPlayer) => {
+    output += player.bestHand?.weight == previousWeight ? "=" : " ";
+    output += player.name;
+    return player.bestHand === undefined ? -1 : player.bestHand.weight;
+  }, 0);
 
-const omahaHoldemGameBuilder = (input: String[]): IGame => {
-  const board = input.shift();
-  return {
-    type: GameType.OMAHA_HOLDEM,
-    board: undefined === board ? [] : stringToCardsArray(board),
-    players: input.map((str: String) => {
-      return {
-        name: str,
-        cards: stringToCardsArray(str),
-        bestHand: undefined
-      }
-    }),
-  };
+  console.log(output.trim());
 }
-
-const fiveCardDrawGameBuilder = (input: String[]): IGame => {
-  return {
-    type: GameType.FIVE_CARD_DRAW,
-    board: [],
-    players: input.map((str: String) => {
-      return {
-        name: str,
-        cards: stringToCardsArray(str),
-        bestHand: undefined
-      }
-    }),
-  };
-}
-
-const stringToCardsArray = (str: String): ICard[] => {
-  return str.match(/.{1,2}/g)!.map((cardStr) => <ICard>{
-    suit: cardStr[1],
-    rank: cardStr[0],
-  });
-}
-
 
 rl.on("line", function (line: String) {
   const errorPrefix = "Error: ";
@@ -69,15 +30,15 @@ rl.on("line", function (line: String) {
 
   switch (gameType) {
     case GameType.TEXAS_HOLDEM: {
-      game = texasHoldemGameBuilder(input);
+      game = texasHoldemGameFactory(input);
       break;
     }
     case GameType.OMAHA_HOLDEM: {
-      game = omahaHoldemGameBuilder(input);
+      game = omahaHoldemGameFactory(input);
       break;
     }
     case GameType.FIVE_CARD_DRAW: {
-      game = fiveCardDrawGameBuilder(input);
+      game = fiveCardDrawGameFactory(input);
       break;
     }
     case undefined: {
@@ -91,4 +52,5 @@ rl.on("line", function (line: String) {
   }
 
   processGame(game);
+  viewGameResults(game);
 });

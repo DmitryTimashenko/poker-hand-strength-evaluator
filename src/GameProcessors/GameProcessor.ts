@@ -1,5 +1,5 @@
 import { GameType } from "../Constants";
-import { ICard, IGame, IPlayer, IPokerHand } from "../Contracts";
+import { ICard, IGame, IPokerHand } from "../Contracts";
 import { getPokerHand } from "../Factory";
 import { produceCombinations } from "../Helpers/Сombinatorics";
 
@@ -15,13 +15,13 @@ const handSetsCountMap = {
   [GameType.FIVE_CARD_DRAW]: 5,
 }
 
-const processGame = (game: IGame) => {
+const processGame = (game: IGame): IGame => {
   let boardSetsCount = boardSetsCountMap[game.type]
   let handSetsCount = handSetsCountMap[game.type];
 
   let boardSets = produceCombinations(game.board, boardSetsCount);
-  let players: IPlayer[] = game.players.map(player => {
 
+  game.players.forEach(player => {
     if (0 === boardSetsCount) {
       player.bestHand = getPokerHand(player.cards);
     } else {
@@ -36,25 +36,16 @@ const processGame = (game: IGame) => {
     return player;
   });
 
-  players.sort((a, b) => {
+  game.players.sort((a, b) => {
     let aWeight = a.bestHand?.weight ?? 0;
     let bWeight = b.bestHand?.weight ?? 0;
-    if(aWeight < bWeight) {
+    if (aWeight < bWeight) {
       return -1;
     }
     return 1;
   });
 
-
-  let output = '';
-  players.reduce((previousWeight: number, player: IPlayer) => {
-    output += player.bestHand?.weight == previousWeight ? "=" : " ";
-    output += player.name;
-    return player.bestHand === undefined ? -1 : player.bestHand.weight;
-  }, 0);
-
-  console.log(output.trim());
-
+  return game;
 }
 
 const combineTwoSets = (firstSet: Array<ICard[]>, secondSet: Array<ICard[]>): Array<ICard[]> => {

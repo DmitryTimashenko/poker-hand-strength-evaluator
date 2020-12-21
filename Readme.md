@@ -1,5 +1,5 @@
 ### Author
-Dmitry Timashenko <dmitry.timashenko>
+Dmitry Timashenko <dmitry.timashenko@gmail.com>
 
 ### Programming language
 TypeScript
